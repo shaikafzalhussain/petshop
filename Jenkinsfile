@@ -1,26 +1,33 @@
-pipeline{
+// This is the simplest possible Declarative Pipeline.
+// It focuses only on the initial build steps.
+pipeline {
+    // 1. AGENT: Defines where the pipeline will run. 
+    // 'any' tells Jenkins to use any available worker node.
     agent any
-    stages{
-        stage("build"){
-            steps{
-                echo " This is building stage :)"
-            
+
+    // 2. STAGES: Defines the sequence of work. 
+    stages {
+        stage('Application Build') {
+            steps {
+                // Checkout the code from your connected SCM (e.g., GitHub).
+                echo 'Checking out source code...'
+                checkout scm
+
+                // Placeholder for your actual build command (e.g., compiling code).
+                echo 'Starting the actual build process.'
+                sh 'echo "Running build scripts here..."'
             }
         }
-        stage("test"){
-            steps{
-                echo " This is testing stage :)"
-            }
-        }
-        stage("deploy"){
-            steps{
-                echo " This is deploying stage :)"
-            }
-        }
-        stage(" project completed :)"){
-            steps{
-                echo " Now the project was successfully completed"
-            }
+    }
+
+    // 3. POST: Optional but good for cleanup.
+    // The entire post section (and all its conditions) must be enclosed in one {} block.
+    post {
+        // The 'always' condition runs every time, successful or not.
+        always {
+            // Clean up the workspace on the agent after the job is finished.
+            cleanWs()
+            echo 'Build complete.'
         }
     }
 }
